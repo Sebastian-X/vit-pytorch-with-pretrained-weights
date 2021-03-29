@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 datasets/pretrained_models
+datasets/imagenet*
