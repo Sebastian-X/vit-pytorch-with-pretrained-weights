@@ -26,7 +26,7 @@ v = ViT(
     emb_dropout = 0.1
 )
 
-ckpt_path = 'datasets/pretrained_models/jx_vit_base_p16_224-80ecf9dd.pth'
+ckpt_path = 'datasets/pretrained_models/jx_vit_base_patch16_224_in21k-e5005f0a.pth'
 weight = torch.load(ckpt_path)
 img = torch.randn(1, 3, 256, 256)
 mask = torch.ones(1, 8, 8).bool() # optional mask, designating which patch to attend to
@@ -34,6 +34,6 @@ mask = torch.ones(1, 8, 8).bool() # optional mask, designating which patch to at
 print(v)
 # preds = v(img, mask = mask) # (1, 1000)
 for key in weight:
-    save_weight_dict('datasets/weight_txt', 'ckpt_weight_keys.txt', key, weight[key].shape)
+    save_weight_dict('datasets/weight_txt', '21k_ckpt_weight_keys.txt', key, weight[key].shape)
 for key in v.state_dict():
     save_weight_dict('datasets/weight_txt', 'model_keys.txt', key, v.state_dict()[key].shape)

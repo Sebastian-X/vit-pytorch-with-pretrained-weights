@@ -40,3 +40,9 @@ def _pil_interp(method):
     else:
         # default bilinear, do we want to allow nearest?
         return Image.BILINEAR
+
+def load_partial_weight(model, weight):
+    model_dict = model.state_dict()
+    state_dict = {k:v for k,v in weight.items() if k in model_dict.keys()}
+    model_dict.update(state_dict)
+    model.load_state_dict(model_dict)

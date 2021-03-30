@@ -8,7 +8,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 
 from vit_pytorch_loc.vit_pytorch import ViT
-from utils.utils import set_gpu, seed_all, _pil_interp
+from utils.utils import set_gpu, seed_all, _pil_interp, load_partial_weight
 
 from tqdm import tqdm
 import argparse
@@ -118,7 +118,8 @@ if __name__ == '__main__':
     print('Loading Weights from \'{}\''.format(ckpt_path))
     print()
     weight = torch.load(ckpt_path)
-    v.load_state_dict(weight)
+    # v.load_state_dict(weight)
+    load_partial_weight(v, weight)
     v.cuda()
     
 

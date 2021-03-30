@@ -15,9 +15,15 @@ def save_weight_dict(root_path, file_name, key, shape):
 
 
 if __name__ == '__main__':
+    # whether to remain fc layers
+    backbone = True
+
     weight_root_path = 'datasets/pretrained_models'
-    ori_weight_file = 'jx_vit_base_p16_224-80ecf9dd.pth'
-    trans_weight_file = 'base_p16_224.pth'
+    ori_weight_file = 'jx_vit_base_patch16_224_in21k-e5005f0a.pth'
+    trans_weight_file = '21k_base_p16_224.pth'
+
+    if backbone:
+        trans_weight_file = '21k_base_p16_224_backbone.pth'
 
     ori_weight_path = os.path.join(weight_root_path, ori_weight_file)
     trans_weight_path = os.path.join(weight_root_path, trans_weight_file)
@@ -71,11 +77,14 @@ if __name__ == '__main__':
         else:
             trans_weight[trans_key] = ori_weight[key]
         '''
+        if backbone:
+            if 'mlp_head.1' in trans_key:
+                continue
         trans_weight[trans_key] = ori_weight[key]
 
     torch.save(trans_weight, trans_weight_path)
     print('\nTrans_weight saved to \'{}\''.format(trans_weight_path))
 
     for key in trans_weight:
-        save_weight_dict('./datasets/weight_txt', 'trans_weight.txt', key, trans_weight[key].shape)
-    print('Weight log saved to \'{}\''.format(os.path.join('./datasets/weight_txt', 'trans_weight.txt')))
+        save_weight_dict('./datasets/weight_txt', '21k_trans_weight_backbone.txt', key, trans_weight[key].shape)
+    print('Weight log saved to \'{}\''.format(os.path.join('./datasets/weight_txt', '21k_trans_weight_backbone.txt')))
