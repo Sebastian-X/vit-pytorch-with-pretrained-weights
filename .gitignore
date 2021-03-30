@@ -131,3 +131,7 @@ dmypy.json
 datasets/pretrained_models
 datasets/imagenet*
 datasets/cifar*
+datasets/weight_txt/*
+
+*.png 
+*.gif

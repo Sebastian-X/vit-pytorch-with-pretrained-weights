@@ -15,15 +15,24 @@ def save_weight_dict(root_path, file_name, key, shape):
 
 
 if __name__ == '__main__':
-    # whether to remain fc layers
+    # !!!  whether to remain fc layers
     backbone = True
 
+    # related input and output files
     weight_root_path = 'datasets/pretrained_models'
-    ori_weight_file = 'jx_vit_base_patch16_224_in21k-e5005f0a.pth'
-    trans_weight_file = '21k_base_p16_224.pth'
-
+    ori_weight_file = 'jx_vit_base_p16_224-80ecf9dd.pth'
     if backbone:
-        trans_weight_file = '21k_base_p16_224_backbone.pth'
+        trans_weight_file = 'base_p16_224_backbone.pth'
+    else:
+        trans_weight_file = 'base_p16_224.pth'
+
+    weight_txt_root_path = 'datasets/weight_txt'
+    if backbone:
+        weight_txt_file = 'trans_weight_backbone.txt'
+    else:
+        weight_txt_file = 'trans_weight.txt'
+
+
 
     ori_weight_path = os.path.join(weight_root_path, ori_weight_file)
     trans_weight_path = os.path.join(weight_root_path, trans_weight_file)
@@ -86,5 +95,5 @@ if __name__ == '__main__':
     print('\nTrans_weight saved to \'{}\''.format(trans_weight_path))
 
     for key in trans_weight:
-        save_weight_dict('./datasets/weight_txt', '21k_trans_weight_backbone.txt', key, trans_weight[key].shape)
-    print('Weight log saved to \'{}\''.format(os.path.join('./datasets/weight_txt', '21k_trans_weight_backbone.txt')))
+        save_weight_dict(weight_txt_root_path, weight_txt_file, key, trans_weight[key].shape)
+    print('Weight log saved to \'{}\''.format(os.path.join(weight_txt_root_path, weight_txt_file)))
