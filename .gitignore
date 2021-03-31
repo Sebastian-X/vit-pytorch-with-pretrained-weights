@@ -128,10 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-datasets/pretrained_models
-datasets/imagenet*
-datasets/cifar*
-datasets/weight_txt/*
+datasets/
+save/
 
 *.png 
 *.gif

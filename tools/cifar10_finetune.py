@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # general parameters for data and model
     # data parameters
     parser.add_argument('--data_path', default='./datasets/cifar10/', type=str, help='path to ImageNet data')
-    parser.add_argument('--ckpt_path', default='datasets/pretrained_models/base_p16_224_backbone.pth', type=str, help='path to checkpoint')
+    parser.add_argument('--ckpt_path', default='datasets/pretrained_models/base_p16_224_backbone.pth', type=str, help='path to load checkpoint')
     parser.add_argument('--batch_size', default=64, type=int, help='mini-batch size for data loader')
     parser.add_argument('--workers', default=4, type=int, help='number of workers for data loader') 
     parser.add_argument('--crop_pct', default=0.9, type=float, help='crop ratio')
@@ -47,6 +47,8 @@ if __name__ == '__main__':
     parser.add_argument('--lr', default=1e-3, type=float, help='learning rate')
     parser.add_argument('--val_per', default=1, type=int, help='validate per epochs')
     parser.add_argument('--val_begin',  action='store_true', help='validate before training')
+    parser.add_argument('--save_path', default='./save/cifar10', type=str, help='path to save checkpoints')
+    parser.add_argument('--save_per', default=2, type=int, help='save ckpt per epochs')
 
 
     # other parameters
@@ -62,7 +64,6 @@ if __name__ == '__main__':
 
     seed_all(args.seed)
     set_gpu(args.gpu)
-
 
     # build validation dataset
     data_path = args.data_path
@@ -138,6 +139,14 @@ if __name__ == '__main__':
     print('Building ViT Model:\n{}'.format(v))
     print()
 
+    # initialize save_path
+    save_path = args.save_path
+    if not os.path.isdir(save_path):
+        print('Creating Saving Path: \'{}\''.format(save_path))
+        os.makedirs(save_path)
+    else:
+        print('\033[1;31mWARNING: Saving Path \'{}\' Already Exist. May Cover Saved Checkpoints\033[0m'.format(save_path))
+
     # load weight
     ckpt_path = args.ckpt_path
     print('Loading Weights from \'{}\''.format(ckpt_path))
@@ -149,6 +158,7 @@ if __name__ == '__main__':
     # build optimizer
     max_epoch = args.max_epoch
     val_per_epoch = args.val_per
+    save_per_epoch = args.save_per
     lr = args.lr
 
     criterion = nn.CrossEntropyLoss().cuda()
@@ -174,6 +184,7 @@ if __name__ == '__main__':
             print()
 
     # run train on cifar10
+    max_acc = 0.0
     for epoch in range(1, max_epoch+1):
         v.train()
         total_train_loss = 0.0
@@ -212,13 +223,33 @@ if __name__ == '__main__':
                     predict_labels = predict_labels.view(-1)
                     correct+= torch.sum(torch.eq(predict_labels,labels)).item()
                     total+=len(labels)
-                print('Validated Epoch {} on {} Images, Accuracy: {}%'.format(epoch, total, correct/total*100.0))
+                val_acc = correct/total*100.0
+                print('Validated Epoch {} on {} Images, Accuracy: {}%'.format(epoch, total, val_acc))
                 # print('Final Accuracy: %f%%'%(correct/total*100.0))
-                
+
+        # save checkpoint
+        if val_acc > max_acc:
+            save_file = 'max_acc_epoch_' + str(epoch) + '.pth'
+            save_file_path = os.path.join(save_path, save_file)
+            torch.save(v.state_dict(), save_file_path)
+            print('Max_Acc Checkpoint Saved to \'{}\''.format(save_file_path))
+        if (epoch%save_per_epoch==0):
+            save_file = 'epoch_' + str(epoch)
+            save_file_path = os.path.join(save_path, save_file)
+            torch.save(v.state_dict(), save_file_path)
+            print('Epoch {} Checkpoint Saved to \'{}\''.format(epoch, save_file_path))
+        print()
+
+    # save final weight
+    print('Training Finished')
+    save_file = 'final_epoch_' + str(epoch) + '.pth'
+    save_file_path = os.path.join(save_path, save_file)
+    torch.save(v.state_dict(), save_file_path)
+    print('Final Checkpoint Saved to \'{}\''.format(save_file_path))
+
     # run test on cifar10
     print()
-    print('Training finished')
-    print('Testing ViT on Cifar10 testset')
+    print('Testing Fine-tuned ViT on Cifar10 Testset')
     v.eval()
     correct = 0
     total = 0

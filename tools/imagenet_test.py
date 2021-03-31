@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     # other parameters
     parser.add_argument('--seed', default=1005, type=int, help='random seed for results reproduction')
-    parser.add_argument('--gpu', default='0', type=str, help='gpu')
+    parser.add_argument('--gpu', default='0', type=str, help='set gpu')
 
     args = parser.parse_args()
 
