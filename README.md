@@ -52,7 +52,7 @@ Ross Wightman从官方JAX库中转换为支持pytorch的`.pth`权重文件可以
 
 
 
-##### Tips
+#### Tips
 
 - 利用`tee`命令将终端显示信息另存至一个文本文件。例：
 
@@ -75,7 +75,7 @@ Ross Wightman从官方JAX库中转换为支持pytorch的`.pth`权重文件可以
 
 
 
-##### To Do List
+#### To Do List
 
 - 训练调优
 
