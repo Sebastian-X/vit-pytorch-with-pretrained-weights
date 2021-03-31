@@ -4,7 +4,7 @@
 
 #### 简介
 
-本代码在<a href="https://github.com/lucidrains/vit-pytorch">lucidrains</a>实现的ViT基础上修改，适配了<a href="ttps://github.com/rwightman/pytorch-image-models">Ross Wightman</a>从官方JAX库中提取出的权重文件，并添加了转换权重文件以及简单的test、fine-tune程序。
+本代码在<a href="https://github.com/lucidrains/vit-pytorch">lucidrains</a>实现的ViT基础上修改，适配了<a href="ttps://github.com/rwightman/pytorch-image-models">Ross_Wightman</a>从官方JAX库中提取出的权重文件，并添加了转换权重文件以及简单的test、fine-tune程序。
 
 
 
