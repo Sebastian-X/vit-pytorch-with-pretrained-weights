@@ -229,6 +229,7 @@ if __name__ == '__main__':
 
         # save checkpoint
         if val_acc > max_acc:
+            max_acc = val_acc
             save_file = 'max_acc_epoch_' + str(epoch) + '.pth'
             save_file_path = os.path.join(save_path, save_file)
             torch.save(v.state_dict(), save_file_path)
